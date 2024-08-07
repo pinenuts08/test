@@ -42,11 +42,11 @@
 
                     if(this.newTodo) {
                         this.todoList.push(this.newTodo); // 새로운 할 일을 리스트에 삽입
+                        console.log("새로운 할 일 : ",this.newTodo);
                         this.newTodo = ''; // input box 비우기
                     }
 
-                    console.log("새로운 할 일 : ",this.newTodo);
-                    console.log("할 일 리스트 : ", this.todoList);
+                    // console.log("할 일 리스트 : ", this.todoList);
                 },
 
                 deleteTodo(index) { // 할 일 삭제 기능을 하는 메서드
@@ -58,10 +58,62 @@
                     // 만약 arr이 [1,2,3,4,5] 였다면 [1,2,'a','b',4,5] 로 변경됨
                     
 
-                    console.log("할 일 리스트 : ", this.todoList);
+                    // console.log("할 일 리스트 : ", this.todoList);
                 }
                 
             },
+
+            // lifecycle 훅
+            /*
+            - beforeCreate : 인스턴스 초기화 직후, 데이터 관찰 & 이벤트/감시자 설정 전 호출. data, methods 등에 접근 불가
+            - created : 인스턴스 생성 후 호출. data, methods 등에 접근 가능. DOM에 추가 전. 데이터 초기화 & API 호출에 사용
+            - beforeMount : 마운트 시작 직전 호출. 템플릿 컴파일 후 첫 렌더링 직전에 실행
+            - mounted : 인스턴스 마운트 후 호출. DOM에 접근 가능. DOM 조작, 외부 라이브러리 초기화 등에 사용. 전체 렌더링 보장X
+            - beforeUpdate : 데이터가 변경돼 DOM에 패치 직전에 호출. 추가적인 상태 변경 수행 가능
+            - updated : 데이터 변경 후 가상 DOM 재랜더링 & 패치 후 호출. 변경된 DOM 접근 가능
+            - beforeDestroy : 인스턴스 제거 직전 호출. 이벤트 리스너 / 타이머 정리에 사용
+            - destroyed : 인스턴스 제거 후 호출. 모든 디렉티브 바인딩 해제 / 모든 이벤트 리스너 제거
+            */
+
+            beforeCreate() {
+                console.log('beforeCreate : 인스턴스 초기화 직후입니다. 아직 DOM에 접근이 불가합니다.');
+                // debugger;
+            },
+
+            created() {
+                console.log('created : 인스턴스가 생성돼 호출되었습니다. 아직 DOM에는 추가되지 않았습니다.');
+                // debugger;
+            },
+           
+            beforeMount() { // 여기까지는 기존에 html에 직접 작성해 놓은 내용대로만 뜸(js 실행 전)
+                console.log('beforeMount : 템플릿 컴파일 후 첫 렌더링 전입니다. 요소들이 아직 DOM에 mounted되지 않았습니다.');
+                debugger;
+            },
+
+            mounted() { // data에 있는 요소들을 보이게 했다면 여기서부터 화면에 보임
+                console.log('mounted : 인스턴스가 DOM에 마운트되었습니다. DOM에 접근이 가능합니다.');
+                debugger;
+            },
+
+            beforeUpdate() { // 변화가 생기면 호출 (input 칸에 텍스트를 입력하거나 클릭 등의 이벤트가 생기면 이게 호출됨)
+                console.log('beforeUpdate : 데이터 변경 후 DOM에 패치되기 전입니다.');
+                // debugger;
+            },
+
+            updated() { // 변경사항이 DOM에 렌더링 된 후 바로 호출됨
+                console.log('updated : 데이터 변경으로 인해 가상 DOM이 다시 렌더링 및 패치되었습니다.');
+                // debugger;
+            },
+
+            beforeDestroy() { 
+                console.log('beforeDestroy : 인스턴스가 제거되기 직전입니다. 이벤트 리스너 및 타이머를 정리합니다.');
+                debugger;
+            },
+
+            destroyed() {
+                console.log('destroyed : 모든 디렉티브 바인딩 해제, 인스턴스 및 모든 이벤트 리스너가 제거되었습니다.');
+                debugger;
+            }
 
         })
     </script>
