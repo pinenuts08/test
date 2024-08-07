@@ -8,7 +8,7 @@
 </head>
 <body>
     <div id="app">
-        <h2>To-do List</h2>"
+        <h2>To-do List</h2>
         <input v-model="newTodo" @keyup.enter="addTodo" placeholder="할 일 입력"> <!-- 새로운 할 일 입력받을 input. 텍스트 입력 후 엔터를 치면 addTodo 메서드 호출 -->
         <button @click="addTodo">추가</button> <!-- 할 일 추가 버튼. 클릭시 addTodo 메서드 호출 -->
         <ul>
