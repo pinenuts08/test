@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .completed { /* 체크박스 체크시 CSS 변경 */
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h2>To-do List</h2>
+        <input v-model="newTodo" @keyup.enter="addTodo" placeholder="할 일 입력"> <!-- 새로운 할 일 입력받을 input. 텍스트 입력 후 엔터를 치면 addTodo 메서드 호출 -->
+        <button @click="addTodo">추가</button> <!-- 할 일 추가 버튼. 클릭시 addTodo 메서드 호출 -->
+        <ul>
+            <li v-for="(todo, index) in todoList" :key="index"> <!-- todoList 에서 할 일들을 for문을 통해 하나씩 뽑아서 보여줌. :key="index" : index에 따라 정렬 -->
+                <input type="checkbox" v-model="todo.completed" @change="moveToBottom(index)"> <!-- 체크박스. 체크시(완료시) 맨 밑으로 가도록 moveToBottom 메서드 호출 -->
+                <span v-if="!todo.isEditing" :class="{completed:todo.completed}"> <!-- isEditing은 기본적으로 false이기 때문에 해당 if문이 true가 돼서 해당 span태그를 보여줌 -->
+                    {{todo.text}} <!-- 할 일들이 들어갈 자리 -->
+                </span>
+
+                <!-- 수정 버튼을 누르면 isEditing을 true로 바꿔서 else문에 걸려서 span태그는 안보이고 해당 input창이 나타남 -->
+                <!-- 텍스트 수정 후 엔터를 치면 saveTodo 메서드 호출하고 index를 인자로 보냄 -->
+                <!-- 수정된 텍스트는 v-model을 통해 주고받아 별도의 변경된 텍스트 저장 과정이 없이 v-model이 자동으로 업데이트해줌 -->
+                <input v-else v-model="todoList[index].text" @keyup.enter="saveTodo(index)"> 
+
+                <button v-if="!todo.isEditing" @click="editTodo(index)">수정</button> <!-- 할 일 수정 버튼. 클릭시 editTodo 메서드 호출하고 index를 인자로 보냄 -->
+                <button v-else @click="saveTodo(index)">수정완료</button> <!-- 수정 완료 버튼. 클릭시 saveTodo 메서드 호출하고 index를 인자로 보냄 -->
+                <button @click="deleteTodo(index)">삭제</button> <!-- 할 일 삭제 버튼. 클릭시 deleteTodo 메서드 호출하고 index를 인자로 보냄 -->
+            </li>
+        </ul>
+    </div>
+    <script>
+        /*
+        - el: 마운트할 DOM 엘리먼트
+        - data: 반응형 데이터 객체
+        - methods: 메서드 정의
+        - computed: 계산된 속성
+        - watch: 데이터 변화 감시
+        - lifecycle hooks: 생명주기 훅 메서드
+        - components: 하위 컴포넌트 등록
+        */
+        var app = new Vue({ // Vue 인스턴스 생성
+            el: '#app',
+            
+            data: {
+                newTodo: '', // 새로운 할 일을 저장할 변수 데이터
+                todoList : [], // 할 일 항목들을 저장할 배열
+                cnt: 0 // 할 일 완료시 인덱스 정리를 위한 count값
+            },
+
+            methods: {
+
+                addTodo() { // 할 일 추가 기능을 하는 메서드
+                    console.log("addTodo() 호출");
+
+                    // const newTodo = {text : this.newTodo, isEditing: false, completed: false, id: this.nextId++};
+                    // this.todoList
+
+                    if(this.newTodo) { // 입력받은 값이 있으면
+                        this.todoList.push({text : this.newTodo, isEditing : false, completed : false, id : this.cnt++}); // 새로운 할 일을 리스트에 삽입. 기본적으로 isEditing과 colpleted은 false로 해놓음
+                        console.log("새로운 할 일 : ",this.newTodo);
+                        this.newTodo = ''; // input box 비우기
+                    }
+                },
+                
+                editTodo(index) { // 할 일 수정을 가능하게 하는 메서드(idEditing을 true로 변경)
+                    console.log("editTodo() 호출");
+                    this.todoList[index].isEditing = true; // isEditing을 true로 바꿔서 span 태그가 아니라 input 태그가 뜨게 함
+                },
+                
+                saveTodo(index) { // 수정한 할 일 저장 기능을 하는 메서드(idEditing을 false로 변경)
+                    console.log("saveTodo() 호출");
+                    console.log("수정된 할 일 : ", this.todoList[index].text);
+                    this.todoList[index].isEditing = false; // isEditing을 다시 false로 바꿔서 input 태그가 아니라 span 태그가 뜨게 함
+                },
+                
+                deleteTodo(index) { // 할 일 삭제 기능을 하는 메서드
+                    console.log("deleteTodo() 호출");
+
+                    this.todoList.splice(index,1); // 해당 할 일을 리스트에서 삭제
+                    // splice(index, num) => index : array에서 지울 데이터의 index, num : 지울 데이터 수
+                    // 데이터를 변경하는데도 사용 가능 e.g) arr.splice(2,1,'a','b') : 인덱스 2부터 1개의 요소를 'a' 와 'b' 로 변경
+                    // 만약 arr이 [1,2,3,4,5] 였다면 [1,2,'a','b',4,5] 로 변경됨
+                },
+
+                moveToBottom(index) { // 완료한 할 일 맨 밑으로 빼기
+                    const todo = this.todoList[index]; // 해당 index의 요소를 변수 todo로 받기
+                    if(todo.completed) { // todo가 completed=true 상태면 (완료 체크 상태면)
+                        this.todoList.splice(index,1); // 리스트에서 제거
+                        this.todoList.push(todo); // 다시 삽입
+                        this.todoList[index-1].completed = false;
+                    }
+                }
+                
+            },
+
+            // lifecycle 훅
+            /*
+            - beforeCreate : 인스턴스 초기화 직후, 데이터 관찰 & 이벤트/감시자 설정 전 호출. data, methods 등에 접근 불가
+            - created : 인스턴스 생성 후 호출. data, methods 등에 접근 가능. DOM에 추가 전. 데이터 초기화 & API 호출에 사용
+            - beforeMount : 마운트 시작 직전 호출. 템플릿 컴파일 후 첫 렌더링 직전에 실행
+            - mounted : 인스턴스 마운트 후 호출. DOM에 접근 가능. DOM 조작, 외부 라이브러리 초기화 등에 사용. 전체 렌더링 보장X
+            - beforeUpdate : 데이터가 변경돼 DOM에 패치 직전에 호출. 추가적인 상태 변경 수행 가능
+            - updated : 데이터 변경 후 가상 DOM 재랜더링 & 패치 후 호출. 변경된 DOM 접근 가능
+            - beforeDestroy : 인스턴스 제거 직전 호출. 이벤트 리스너 / 타이머 정리에 사용
+            - destroyed : 인스턴스 제거 후 호출. 모든 디렉티브 바인딩 해제 / 모든 이벤트 리스너 제거
+            */
+
+            beforeCreate() {
+                console.log('beforeCreate : 인스턴스 초기화 직후입니다. 아직 DOM에 접근이 불가합니다.');
+                // debugger;
+            },
+
+            created() {
+                console.log('created : 인스턴스가 생성돼 호출되었습니다. 아직 DOM에는 추가되지 않았습니다.');
+                this.addTodo(); // 컴포넌트를 렌더링하기 전에 데이터를 패치해야 할 때 created 훅 사용
+                // debugger;
+            },
+           
+            beforeMount() { // 여기까지는 기존에 html에 직접 작성해 놓은 내용대로만 뜸(js 실행 전)
+                console.log('beforeMount : 템플릿 컴파일 후 첫 렌더링 전입니다. 요소들이 아직 DOM에 mounted되지 않았습니다.');
+                // debugger;
+            },
+
+            mounted() { // data에 있는 요소들을 보이게 했다면 여기서부터 화면에 보임
+                console.log('mounted : 인스턴스가 DOM에 마운트되었습니다. DOM에 접근이 가능합니다.');
+                // debugger;
+            },
+
+            beforeUpdate() { // 변화가 생기면 호출 (input 칸에 텍스트를 입력하거나 클릭 등의 이벤트가 생기면 이게 호출됨)
+                console.log('beforeUpdate : 데이터 변경 후 DOM에 패치되기 전입니다.');
+                // debugger;
+            },
+
+            updated() { // 변경사항이 DOM에 렌더링 된 후 바로 호출됨
+                console.log('updated : 데이터 변경으로 인해 가상 DOM이 다시 렌더링 및 패치되었습니다.');
+                // debugger;
+            },
+
+            beforeDestroy() { 
+                console.log('beforeDestroy : 인스턴스가 제거되기 직전입니다. 이벤트 리스너 및 타이머를 정리합니다.');
+                debugger;
+            },
+
+            destroyed() {
+                console.log('destroyed : 모든 디렉티브 바인딩 해제, 인스턴스 및 모든 이벤트 리스너가 제거되었습니다.');
+                debugger;
+            }
+
+        })
+    </script>
+</body>
+</html>
