@@ -19,7 +19,11 @@
         <button @click="addTodo">추가</button> <!-- 할 일 추가 버튼. 클릭시 addTodo 메서드 호출 -->
         <ul>
             <li v-for="(todo, index) in todoList" :key="index"> <!-- todoList 에서 할 일들을 for문을 통해 하나씩 뽑아서 보여줌. :key="index" : index에 따라 정렬 -->
-                <input type="checkbox" v-model="todo.completed" @change="moveToBottom(index)"> <!-- 체크박스. 체크시(완료시) 맨 밑으로 가도록 moveToBottom 메서드 호출 -->
+
+                <!-- 체크박스. 체크시(완료시) 맨 밑으로 가도록 moveToBottom 메서드 호출 -->
+                <!-- class를 todo의 completed 값으로 설정(true/false) -->
+                <input type="checkbox" v-model="todo.completed" @change="moveToBottom(index)">
+
                 <span v-if="!todo.isEditing" :class="{completed:todo.completed}"> <!-- isEditing은 기본적으로 false이기 때문에 해당 if문이 true가 돼서 해당 span태그를 보여줌 -->
                     {{todo.text}} <!-- 할 일들이 들어갈 자리 -->
                 </span>
@@ -94,7 +98,6 @@
                     if(todo.completed) { // todo가 completed=true 상태면 (완료 체크 상태면)
                         this.todoList.splice(index,1); // 리스트에서 제거
                         this.todoList.push(todo); // 다시 삽입
-                        this.todoList[index-1].completed = false;
                     }
                 }
                 
