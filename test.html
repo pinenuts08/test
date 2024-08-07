@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <ul>
+            <li v-for="x in list">
+                {{x}}
+            </li>
+        </ul>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+
+        data: {
+            list: [
+                '삐','그','덕'
+                // 브라우저의 콘솔창에서 app.list.push('')를 통해 원하는 데이터를 리스트에 추가 가능
+                // 반대로 app.list.pop()을 통해 리스트의 마지막 데이터 삭제 가능
+            ]
+        }
+    })
+</script>
+</html>
