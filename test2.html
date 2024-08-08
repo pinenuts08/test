@@ -17,10 +17,16 @@
         <h2>To-do List</h2>
         <input v-model="newTodo" @keyup.enter="addTodo" placeholder="할 일 입력"> <!-- 새로운 할 일 입력받을 input. 텍스트 입력 후 엔터를 치면 addTodo 메서드 호출 -->
         <button @click="addTodo">추가</button> <!-- 할 일 추가 버튼. 클릭시 addTodo 메서드 호출 -->
+
+        <br>
+
+        <!-- 전체 선택 체크박스 -->
+        <label for="all">전체 선택</label><input value="all" type="checkbox" v-model="checkAll">
+
         <ul>
             <li v-for="(todo, index) in todoList" :key="index"> <!-- todoList 에서 할 일들을 for문을 통해 하나씩 뽑아서 보여줌. :key="index" : index에 따라 정렬 -->
 
-                <!-- 체크박스. 체크시(완료시) 맨 밑으로 가도록 moveToBottom 메서드 호출 -->
+                <!-- 일반 체크박스. 체크시(완료시) 맨 밑으로 가도록 moveToBottom 메서드 호출 -->
                 <!-- class를 todo의 completed 값으로 설정(true/false) -->
                 <input type="checkbox" v-model="todo.completed" @change="moveToBottom(index)">
 
@@ -55,7 +61,8 @@
             data: {
                 newTodo: '', // 새로운 할 일을 저장할 변수 데이터
                 todoList : [], // 할 일 항목들을 저장할 배열
-                cnt: 0 // 할 일 완료시 인덱스 정리를 위한 count값
+                checkedList : [],
+                checkAll : false
             },
 
             methods: {

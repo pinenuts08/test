@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -12,9 +18,23 @@
         <input v-model="newTodo" @keyup.enter="addTodo" placeholder="할 일 입력">
         <button @click="addTodo">추가</button>
         
+        <br>
+
+        <!-- 전체 체크박스 -->
+        <label>전체 선택</label>
+        <input type="checkbox" v-model="selectAll">
+
+        <!-- 전체 삭제 버튼 -->
+        <button @click="deleteAllTodo()">전체 삭제</button>
+
+        <!-- 선택 삭제 버튼 -->
+        <button @click="deleteSelectedTodo()">선택 삭제</button>
+
+        <!-- 개별 체크박스 -->
         <ul>
-            <li v-for="(todo, index) in todoList" :key="index">
-                {{todo}}
+            <li v-for="(todo, index) in todoList" :key="todo.id">
+                <input type="checkbox" v-model="todo.selected">
+                <span :class="{completed:todo.selected}">{{todo.text}}</span>
                 <button @click="deleteTodo(index)">삭제</button>
             </li>
         </ul>
@@ -25,19 +45,46 @@
 
                 data: {
                     newTodo: '',
-                    todoList: []
+                    todoList: [],
+                    selected: false,
+                    cnt: 0
                 },
+
+                computed: {
+                    selectAll: {
+                        get() {
+                            // 모든 목록이 체크됐을 때만 ture 반환
+                            return this.todoList.length && this.todoList.every(todo => todo.selected)
+                        },
+
+                        set(value) {
+                            // 전체선택 체크박스가 체크되면 모든 목록을 체크하도록 set
+                            this.todoList.forEach(todo => {
+                                todo.selected = value;
+                            });
+                        }
+                    }
+                },
+
 
                 methods: {
                     addTodo() {
                         if (this.newTodo) {
-                            this.todoList.push(this.newTodo);
+                            this.todoList.push({text:this.newTodo, selected:false, id:this.cnt++});
                             this.newTodo = '';
                         }
                     },
 
                     deleteTodo(index) {
                         this.todoList.splice(index, 1);
+                    },
+
+                    deleteAllTodo() {
+                        this.todoList = [];
+                        this.cnt = 0;
+                    },
+                    deleteSelectedTodo() {
+                        this.todoList = this.todoList.filter(todo => !todo.selected);
                     }
                 },
 
@@ -76,6 +123,7 @@
                 }
 
             })
+        
     </script>
 </body>
 </html>
