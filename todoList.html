@@ -6,38 +6,80 @@
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <style>
+        #app {
+            width: 280px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            top:50%;
+            background-color: #3f5fff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .btn:hover {
+            background-color: #293ea7;
+            box-shadow: 0px 2px 2px 0px rgb(0, 0, 0);
+        }
+        
+        #inputText {
+            margin-bottom: 10px;
+        }
+
+        #content {
+            border: 2px solid #3f5fff;
+            border-radius: 10px;
+            padding-left: 10px;
+            padding-top: 10px;
+        }
+
         .completed {
             text-decoration: line-through;
             color: gray;
         }
+
+        ul {
+            margin-top: 5px;
+            padding-left: 0;
+        }
+
+        li {
+            list-style-type: none;
+            margin-bottom: 2px;
+        }
+
     </style>
 </head>
 <body>
     <div id="app">
         <h2>To-do List</h2>
-        <input v-model="newTodo" @keyup.enter="addTodo" placeholder="할 일 입력">
-        <button @click="addTodo">추가</button>
-        
-        <br>
+        <div id="inputText">
+            <input v-model="newTodo" @keyup.enter="addTodo" placeholder="할 일 입력">
+            <button @click="addTodo" class="btn">추가</button>
+        </div>
 
-        <!-- 전체 체크박스 -->
-        <label>전체 선택</label>
-        <input type="checkbox" v-model="selectAll">
+        <div id="content">
+            <!-- 전체 체크박스 -->
+            <label>전체 선택</label>
+            <input type="checkbox" v-model="selectAll">
 
-        <!-- 전체 삭제 버튼 -->
-        <button @click="deleteAllTodo()">전체 삭제</button>
+            <!-- 전체 삭제 버튼 -->
+            <button @click="deleteAllTodo()" class="btn">전체 삭제</button>
 
-        <!-- 선택 삭제 버튼 -->
-        <button @click="deleteSelectedTodo()">선택 삭제</button>
+            <!-- 선택 삭제 버튼 -->
+            <button @click="deleteSelectedTodo()" class="btn">선택 삭제</button>
 
-        <!-- 개별 체크박스 -->
-        <ul>
-            <li v-for="(todo, index) in todoList" :key="todo.id">
-                <input type="checkbox" v-model="todo.selected">
-                <span :class="{completed:todo.selected}">{{todo.text}}</span>
-                <button @click="deleteTodo(index)">삭제</button>
-            </li>
-        </ul>
+            <!-- 개별 체크박스 -->
+            <ul>
+                <li v-for="(todo, index) in todoList" :key="todo.id">
+                    <input type="checkbox" v-model="todo.selected">
+                    <span :class="{completed:todo.selected}">{{todo.text}}</span>
+                    <button @click="deleteTodo(index)" class="btn">삭제</button>
+                </li>
+            </ul>
+        </div>
     </div>
     <script>
         var app = new Vue({
