@@ -103,7 +103,7 @@
                 computed: {
                     selectAll: {
                         get() {
-                            // 모든 목록이 체크됐을 때만 ture 반환
+                            // 모든 목록이 체크됐을 때만 true 반환
                             return this.todoList.length && this.todoList.every(todo => todo.selected)
                         },
 
