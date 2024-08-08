@@ -90,11 +90,14 @@
         var app = new Vue({
                 el: '#app',
 
-                data: {
-                    newTodo: '',
-                    todoList: [],
-                    selected: false,
-                    cnt: 0
+                data() {
+                    return {
+                        newTodo: '',
+                        todoList: [],
+                        selected: false,
+                        cnt: 0
+                        
+                    }
                 },
 
                 computed: {
