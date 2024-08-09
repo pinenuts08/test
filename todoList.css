@@ -1,0 +1,48 @@
+#app {
+    width: 340px;
+    margin: 0 auto;
+}
+
+.btn {
+    top: 50%;
+    background-color: #3f5fff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+.btn:hover {
+    background-color: #293ea7;
+    box-shadow: 0px 2px 2px 0px rgb(0, 0, 0);
+}
+
+#inputText {
+    margin-bottom: 10px;
+}
+
+#content {
+    border: 2px solid #3f5fff;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+
+ul {
+    margin-top: 5px;
+    padding-left: 0;
+}
+
+li {
+    list-style-type: none;
+    margin-bottom: 2px;
+}
+
+span {
+    display: inline-block;
+    width: 180px;
+}
