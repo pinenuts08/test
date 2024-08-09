@@ -109,7 +109,7 @@ new Vue({
 
     mounted() {
         console.log('mounted : 인스턴스가 DOM에 마운트되었습니다. DOM에 접근이 가능합니다.');
-        this.loadTodos();
+        this.loadTodos(); // 페이지가 로드되면 자동으로 로컬 스토리지 데이터 불러오도록 메서드 호출
         // debugger;
     },
 
@@ -119,7 +119,7 @@ new Vue({
 
     updated() { 
         console.log('updated : 데이터 변경으로 인해 가상 DOM이 다시 렌더링 및 패치되었습니다.');
-        this.updateLocalStorage();
+        this.updateLocalStorage(); // 셀렉트 박스 체크시 업데이트를 위해 메서드 호출
     },
 
     // beforeDestroy() {
