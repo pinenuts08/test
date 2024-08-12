@@ -8,7 +8,8 @@ new Vue({
             selected: false,
             cnt: 0,
             isEditing: false,
-            selectedOption:'all' // 필터링용 변수
+            selectedOption:'all', // 필터링용 변수
+            noTodoLeftMsg: ''
         }
     },
 
@@ -29,13 +30,16 @@ new Vue({
 
         filteredTodo() { // 할 일 목록 필터링할 computed 요소
             if (this.selectedOption==='all') {
+                this.noTodoLeftMsg = "등록된 할 일이 없습니다.";
                 return this.todoList;
             } else if (this.selectedOption==='done') {
+                this.noTodoLeftMsg = "완료된 할 일이 없습니다.";
                 return this.todoList.filter(todo => todo.selected);
             } else if (this.selectedOption==='undone') {
+                this.noTodoLeftMsg = "미완료된 할 일이 없습니다.";
                 return this.todoList.filter(todo => !todo.selected);
             }
-        }
+        },
     },
 
     methods: {

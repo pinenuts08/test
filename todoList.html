@@ -12,45 +12,104 @@
     <div id="app">
         <h2>To-do List</h2>
         <div id="inputText">
-            <input v-model="newTodo" @keyup.enter="addTodo" placeholder="할 일 입력">
-            <button @click="addTodo" class="btn">추가</button>
+            <input 
+                v-model="newTodo" 
+                @keyup.enter="addTodo" 
+                placeholder="할 일 입력"
+            >
+            <button 
+                @click="addTodo" 
+                class="btn"
+            >
+                추가
+            </button>
         </div>
 
         <div id="content">
             <!-- 전체 체크박스 -->
             <label>전체 선택</label>
-            <input type="checkbox" v-model="selectAll">
+            <input 
+                type="checkbox" 
+                v-model="selectAll"
+            >
 
             <!-- 전체 삭제 버튼 -->
-            <button @click="deleteAllTodo()" class="btn">전체 삭제</button>
+            <button 
+                @click="deleteAllTodo()" 
+                class="btn"
+            >
+                전체 삭제
+            </button>
 
             <!-- 선택 삭제 버튼 -->
-            <button @click="deleteSelectedTodo()" class="btn">선택 삭제</button>
+            <button 
+                @click="deleteSelectedTodo()" 
+                class="btn"
+            >
+                선택 삭제
+            </button>
 
             <!-- 필터링 버튼(셀렉트) -->
-            <select name="" id="selectBox" v-model="selectedOption">
+            <select 
+                id="selectBox" 
+                v-model="selectedOption"
+            >
                 <option value="all">전체</option>
                 <option value="done">완료</option>
                 <option value="undone">미완료</option>
             </select>
 
-            <div v-if="todoList.length===0">할 일이 없습니다!</div>
+            <!-- 할 일 목록 부재시 메시지 -->
+            <div v-if="filteredTodo.length===0">
+                {{noTodoLeftMsg}}
+            </div>
 
             <ul>
-                <li v-for="(todo, index) in filteredTodo" :key="todo.id">
+                <li 
+                    v-for="(todo, index) in filteredTodo" 
+                    :key="todo.id"
+                >
                     <!-- 개별 체크박스 -->
-                    <input type="checkbox" v-model="todo.selected">
+                    <input 
+                        type="checkbox" 
+                        v-model="todo.selected"
+                    >
 
                     <!-- 할 일 텍스트 칸 -->
-                    <span v-if="!todo.isEditing" :class="{completed:todo.selected}">{{todo.text}}</span>
-                    <input v-else type="text" v-model="todo.text" @keyup.enter="updateTodo(todo.id)">
+                    <span 
+                        v-if="!todo.isEditing" 
+                        :class="{completed:todo.selected}"
+                    >
+                        {{todo.text}}
+                    </span>
+                    <input 
+                        v-else type="text" 
+                        v-model="todo.text" 
+                        @keyup.enter="updateTodo(todo.id)"
+                    >
 
                     <!-- 할 일 수정 버튼 -->
-                    <button v-if="!todo.isEditing" @click="editTodo(todo.id)" class="btn">수정</button>
-                    <button v-else @click="updateTodo(todo.id)" class="btn">수정 완료</button>
+                    <button 
+                        v-if="!todo.isEditing" 
+                        @click="editTodo(todo.id)" 
+                        class="btn"
+                    >
+                        수정
+                    </button>
+                    <button 
+                        v-else @click="updateTodo(todo.id)" 
+                        class="btn"
+                    >
+                        수정 완료
+                    </button>
 
                     <!-- 할 일 삭제 버튼 -->
-                    <button @click="deleteTodo(todo.id)" class="btn">삭제</button>
+                    <button 
+                        @click="deleteTodo(todo.id)" 
+                        class="btn"
+                    >
+                        삭제
+                    </button>
                 </li>
             </ul>
         </div>
