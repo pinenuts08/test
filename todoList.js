@@ -65,7 +65,8 @@ new Vue({
             }
         },
 
-        deleteTodo(index) {
+        deleteTodo(id) {
+            let index = this.todoList.findIndex(todo=>todo.id === id);
             this.todoList.splice(index, 1);
             this.updateLocalStorage(); 
         },
@@ -80,12 +81,12 @@ new Vue({
             this.updateLocalStorage();   
         },
 
-        editTodo(index) {
-            this.todoList[index].isEditing = true;
+        editTodo(id) {
+            this.todoList.find(todo => todo.id === id).isEditing = true;
         },
         
-        updateTodo(index) {
-            this.todoList[index].isEditing = false;
+        updateTodo(id) {
+            this.todoList.find(todo => todo.id === id).isEditing = false;
             this.updateLocalStorage();
         },
         
