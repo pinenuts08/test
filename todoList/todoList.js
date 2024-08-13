@@ -5,16 +5,14 @@ new Vue({
         return {
             newTodo: '',
             todoList: [],
-            selected: false,
             cnt: 0,
-            isEditing: false,
             selectedOption:'all', // 필터링용 변수
             noTodoLeftMsg: ''
         }
     },
 
     computed: {
-        selectAll: {
+        selectAll: { // 카테고리별로 전체선택 분리하기
             get() {
                 // 모든 목록이 체크됐을 때만 true 반환
                 return this.todoList.length && this.todoList.every(todo => todo.selected)
@@ -29,17 +27,28 @@ new Vue({
         },
 
         filteredTodo() { // 할 일 목록 필터링할 computed 요소
-            if (this.selectedOption==='all') {
-                this.noTodoLeftMsg = "등록된 할 일이 없습니다.";
-                return this.todoList;
-            } else if (this.selectedOption==='done') {
-                this.noTodoLeftMsg = "완료된 할 일이 없습니다.";
-                return this.todoList.filter(todo => todo.selected);
-            } else if (this.selectedOption==='undone') {
-                this.noTodoLeftMsg = "미완료된 할 일이 없습니다.";
-                return this.todoList.filter(todo => !todo.selected);
+            let filteredTodoList = [];
+
+            switch (this.selectedOption) {
+                case 'done':
+                    filteredTodoList = this.todoList.filter(todo => todo.selected);
+                    this.noTodoLeftMsg = "완료된 할 일이 없습니다.";
+                    break;
+                    
+                case 'undone':
+                    filteredTodoList = this.todoList.filter(todo => !todo.selected);
+                    this.noTodoLeftMsg = "미완료된 할 일이 없습니다.";
+                    break
+                    
+                default:
+                    filteredTodoList = this.todoList;
+                    this.noTodoLeftMsg = "등록된 할 일이 없습니다.";
+                    break;
             }
-        },
+
+            return filteredTodoList;
+        }
+
     },
 
     methods: {
@@ -56,7 +65,7 @@ new Vue({
         },
         
         addTodo() {
-            if (this.newTodo) {
+            if (this.newTodo.trim()) {
 
                 this.cnt++ // count 하나 늘리기
                 localStorage.setItem("cnt", this.cnt); // 새로운 count값 로컬 스토리지에 저장
@@ -66,12 +75,13 @@ new Vue({
                 this.newTodo = '';
                 
                 this.updateLocalStorage(); // 로컬 스토리지에 저장하는 updateLocalStorage()메서드 불러오기
+            } else {
+                alert("내용을 입력해주세요.");
             }
         },
 
         deleteTodo(id) {
-            let index = this.todoList.findIndex(todo=>todo.id === id);
-            this.todoList.splice(index, 1);
+            this.todoList = this.todoList.filter(todo=>todo.id !== id);
             this.updateLocalStorage(); 
         },
         
@@ -90,6 +100,10 @@ new Vue({
         },
         
         updateTodo(id) {
+            if (!this.todoList.find(todo => todo.id === id).text) {
+                alert("내용을 입력해주세요.");
+                return;
+            }
             this.todoList.find(todo => todo.id === id).isEditing = false;
             this.updateLocalStorage();
         },
@@ -103,20 +117,20 @@ new Vue({
     //     console.log('beforeCreate : 인스턴스 초기화 직후입니다. 아직 DOM에 접근이 불가합니다.');
     // },
 
-    // created() {
-    //     console.log('created : 인스턴스가 생성돼 호출되었습니다. 아직 DOM에는 추가되지 않았습니다.');
-    // },
+    created() {
+        console.log('created : 인스턴스가 생성돼 호출되었습니다. 아직 DOM에는 추가되지 않았습니다.');
+        this.loadTodos(); // 페이지가 로드되면 자동으로 로컬 스토리지 데이터 불러오도록 메서드 호출
+    },
 
     // beforeMount() {
     //     console.log('beforeMount : 템플릿 컴파일 후 첫 렌더링 전입니다. 요소들이 아직 DOM에 mounted되지 않았습니다.');
     //     // debugger;
     // },
 
-    mounted() {
-        console.log('mounted : 인스턴스가 DOM에 마운트되었습니다. DOM에 접근이 가능합니다.');
-        this.loadTodos(); // 페이지가 로드되면 자동으로 로컬 스토리지 데이터 불러오도록 메서드 호출
-        // debugger;
-    },
+    // mounted() {
+    //     console.log('mounted : 인스턴스가 DOM에 마운트되었습니다. DOM에 접근이 가능합니다.');
+    //     // debugger;
+    // },
 
     // beforeUpdate() { 
     //     console.log('beforeUpdate : 데이터 변경 후 DOM에 패치되기 전입니다.');
