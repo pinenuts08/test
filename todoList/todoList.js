@@ -6,8 +6,9 @@ new Vue({
             newTodo: '',
             todoList: [],
             cnt: 0,
-            selectedOption:'all', // 필터링용 변수
-            noTodoLeftMsg: ''
+            selectedOption:'all',
+            noTodoLeftMsg: '',
+            isAllSelected: false
         }
     },
 
@@ -15,14 +16,14 @@ new Vue({
         selectAll: { // 카테고리별로 전체선택 분리하기
             get() {
                 // 모든 목록이 체크됐을 때만 true 반환
-                return this.todoList.length && this.todoList.every(todo => todo.selected)
+                return this.filteredTodo.length > 0 && this.filteredTodo.every(todo => todo.selected)
             },
 
-            set(value) {
-                // 전체선택 체크박스가 체크되면 모든 목록을 체크하도록 set
-                this.todoList.forEach(todo => {
+            set(value) { // 전체 선택 체크박스가 체크되면 setter가 호출됨
+                this.filteredTodo.forEach(todo => { // 필터링된 todo list를 돌며 개별 객체(todo)의 selected 값을 setter가 전달한 value 값에 맞게 바꿈
                     todo.selected = value;
                 });
+                this.isAllSelected = value; // 전체 선택 체크박스 체크 유무도 value에 맞게 바꿈
             }
         },
 
@@ -31,12 +32,12 @@ new Vue({
 
             switch (this.selectedOption) {
                 case 'done':
-                    filteredTodoList = this.todoList.filter(todo => todo.selected);
+                    filteredTodoList = this.todoList.filter(todo => todo.isDone);
                     this.noTodoLeftMsg = "완료된 할 일이 없습니다.";
                     break;
                     
                 case 'undone':
-                    filteredTodoList = this.todoList.filter(todo => !todo.selected);
+                    filteredTodoList = this.todoList.filter(todo => !todo.isDone);
                     this.noTodoLeftMsg = "미완료된 할 일이 없습니다.";
                     break
                     
@@ -49,6 +50,24 @@ new Vue({
             return filteredTodoList;
         }
 
+    },
+
+    watch: {
+        todoList: { //todoList에 변화가 생기면 작동
+            deep: true,
+            
+            handler() { // newTodoList : 감시하고 있는 요소(여기선 todoList)의 변화 후 값
+                // newTodoList의 모든 개별 객체의 selected 값이 true인지에 따라 isAllSelected 값 변경
+                this.isAllSelected = this.filteredTodo.every(todo => todo.selected);
+            }
+        },
+
+        selectedOption() { // selectedOption(필터링 옵션)에 변화가 생기면 호출
+            this.isAllSelected = false;
+            this.todoList.forEach(todo => { // 필터링된 리스트 안의 각 객체의 selected 옵션 false로 변경
+                todo.selected = false;
+            })
+        }
     },
 
     methods: {
@@ -70,7 +89,7 @@ new Vue({
                 this.cnt++ // count 하나 늘리기
                 localStorage.setItem("cnt", this.cnt); // 새로운 count값 로컬 스토리지에 저장
 
-                let currTodo = {text: this.newTodo, selected: false, id: this.cnt, isEditing: false};
+                let currTodo = {text: this.newTodo, selected: false, id: this.cnt, isEditing: false, isDone: false};
                 this.todoList.push(currTodo);
                 this.newTodo = '';
                 
@@ -86,13 +105,32 @@ new Vue({
         },
         
         deleteAllTodo() {
-            this.todoList = [];
+            switch (this.selectedOption) {
+                case 'done':
+                    this.todoList = this.todoList.filter(todo => !todo.isDone);
+                    break;
+                    
+                case 'undone':
+                    this.todoList = this.todoList.filter(todo => todo.isDone);
+                    break;
+                
+                default:
+                    this.todoList = [];
+                    break;
+            }
+           // this.selectAll = false; // 전체 선택 체크박스 초기화
+            this.isAllSelected = false;
+
             this.updateLocalStorage();
         },
         
         deleteSelectedTodo() {
             this.todoList = this.todoList.filter(todo => !todo.selected);
-            this.updateLocalStorage();   
+            if (this.filteredTodo.length===0) {
+                this.selectAll = false;
+                this.isAllSelected = false;
+            }
+            this.updateLocalStorage();
         },
 
         editTodo(id) {
@@ -110,7 +148,20 @@ new Vue({
         
         updateLocalStorage() {
             localStorage.setItem("todos", JSON.stringify(this.todoList));
+        },
+
+        toggleSelectAll() {
+            this.selectAll = this.isAllSelected;
+        },
+
+        changeIsDone(id) { // 개별 todo의 완료 여부(isDone)를 바꾸는 메서드. 완료 버튼 클릭시 호출됨
+            if (this.todoList.find(todo=>todo.id === id).isDone === false) { // 기존에 isDone 값이 false면
+                this.todoList.find(todo=>todo.id === id).isDone = true; // true로 바꿈
+            } else {
+                this.todoList.find(todo=>todo.id === id).isDone = false;
+            }
         }
+
     },
 
     // beforeCreate() {
