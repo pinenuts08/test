@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="searchMVinfo.css">
+    <script defer src="searchMVinfo.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input 
+            type="text" 
+            placeholder="영화명을 입력하세요"
+            v-model="movieNm"
+            @keyup.enter="searchWithMovieNm(movieNm)"
+        >
+        <button 
+            @click="searchUserNickname" 
+            class="btn"
+        >
+    </div>
+</body>
+</html>
