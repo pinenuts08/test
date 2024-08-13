@@ -27,6 +27,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-redC/
+myProject/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows
