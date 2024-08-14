@@ -56,9 +56,12 @@ new Vue({
         todoList: { //todoList에 변화가 생기면 작동
             deep: true,
             
-            handler() { // newTodoList : 감시하고 있는 요소(여기선 todoList)의 변화 후 값
-                // newTodoList의 모든 개별 객체의 selected 값이 true인지에 따라 isAllSelected 값 변경
-                this.isAllSelected = this.filteredTodo.every(todo => todo.selected);
+            handler() {
+                if (this.filteredTodo.length===0) { // 필터링된 리스트가 비어있으면
+                    this.isAllSelected = false; // 전체 체크박스 해제
+                } else {
+                    this.isAllSelected = this.filteredTodo.every(todo => todo.selected);
+                }
             }
         },
 
@@ -118,18 +121,12 @@ new Vue({
                     this.todoList = [];
                     break;
             }
-           // this.selectAll = false; // 전체 선택 체크박스 초기화
-            this.isAllSelected = false;
 
             this.updateLocalStorage();
         },
         
         deleteSelectedTodo() {
             this.todoList = this.todoList.filter(todo => !todo.selected);
-            if (this.filteredTodo.length===0) {
-                this.selectAll = false;
-                this.isAllSelected = false;
-            }
             this.updateLocalStorage();
         },
 
@@ -160,6 +157,18 @@ new Vue({
             } else {
                 this.todoList.find(todo=>todo.id === id).isDone = false;
             }
+        },
+
+        allDone() {
+            this.filteredTodo.forEach(todo => {
+                todo.isDone = true;
+            })
+        },
+
+        selectDone() {
+            this.filteredTodo.filter(todo => todo.selected).forEach(todo => {
+                todo.isDone = true;
+            });
         }
 
     },

@@ -34,22 +34,6 @@
                 @change="toggleSelectAll"
             >
 
-            <!-- 전체 삭제 버튼 -->
-            <button 
-                @click="deleteAllTodo()" 
-                class="btn"
-            >
-                전체 삭제
-            </button>
-
-            <!-- 선택 삭제 버튼 -->
-            <button 
-                @click="deleteSelectedTodo()" 
-                class="btn"
-            >
-                선택 삭제
-            </button>
-
             <!-- 필터링 버튼(셀렉트) -->
             <select 
                 id="selectBox" 
@@ -59,6 +43,34 @@
                 <option value="done">완료</option>
                 <option value="undone">미완료</option>
             </select>
+
+            <br>
+
+            <!-- 전체 삭제 버튼 -->
+            <button 
+                class="btn"
+                @click="deleteAllTodo()" 
+            >
+                전체 삭제
+            </button>
+
+            <!-- 선택 삭제 버튼 -->
+            <button 
+                class="btn"
+                @click="deleteSelectedTodo()" 
+            >
+                선택 삭제
+            </button>
+
+            <!-- 전체 완료 버튼 -->
+             <button class="btn" @click="allDone()">
+                전체 완료
+             </button>
+
+            <!-- 선택 완료 버튼 -->
+            <button class="btn" click="selectDone()">
+                선택 완료
+            </button>
 
             <!-- 할 일 목록 부재시 메시지 -->
             <div v-if="filteredTodo.length===0">

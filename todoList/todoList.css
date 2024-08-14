@@ -20,6 +20,10 @@
     margin-bottom: 10px;
 }
 
+#selectBox {
+    margin-left: 220px;
+}
+
 #content {
     border: 2px solid #3f5fff;
     border-radius: 10px;
