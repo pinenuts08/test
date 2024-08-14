@@ -76,7 +76,11 @@
                     <input v-else type="text" v-model="todo.text" @keyup.enter="updateTodo(todo.id)">
 
                     <!-- 완료 상태 변경 버튼 -->
-                    <button @click="changeIsDone(todo.id)" class="btn">
+                    <button 
+                        @click="changeIsDone(todo.id)" 
+                        class="btn" 
+                        v-if="!todo.isEditing"
+                    >
                         완료
                     </button>
 

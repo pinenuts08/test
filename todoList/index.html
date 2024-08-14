@@ -90,7 +90,11 @@
                     >
 
                     <!-- 완료 상태 변경 버튼 -->
-                    <button @click="changeIsDone(todo.id)" class="btn">
+                    <button 
+                        @click="changeIsDone(todo.id)" 
+                        class="btn"
+                        v-if="!todo.isEditing"
+                    >
                         완료
                     </button>
 
