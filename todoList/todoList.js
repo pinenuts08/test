@@ -159,7 +159,7 @@ new Vue({
             }
         },
 
-        allDone() {
+        allDone() { // 필터링된 리스트의 모든 항목 완료 상태로 변경
             if (this.filteredTodo.every(todo=>todo.isDone)) {
                 this.filteredTodo.forEach(todo => {
                 todo.isDone = false;
@@ -171,8 +171,7 @@ new Vue({
             }
         },
                 
-
-        selectDone() {
+        selectDone() { // 선택한 항목 완료 상태로 변경
             if (this.filteredTodo.filter(todo => todo.selected).every(todo=>todo.isDone)) {
                 this.filteredTodo.filter(todo => todo.selected).forEach(todo => {
                 todo.isDone = false;
@@ -182,6 +181,10 @@ new Vue({
                     todo.isDone = true;
                 });
             }
+        },
+
+        uncheck() { // 선택 해제
+            this.filteredTodo.forEach(todo => { todo.selected = false; });
         }
         
     },
