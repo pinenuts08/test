@@ -160,18 +160,32 @@ new Vue({
         },
 
         allDone() {
-            this.filteredTodo.forEach(todo => {
-                todo.isDone = true;
+            if (this.filteredTodo.every(todo=>todo.isDone)) {
+                this.filteredTodo.forEach(todo => {
+                todo.isDone = false;
             })
+            } else {
+                this.filteredTodo.forEach(todo => {
+                    todo.isDone = true;
+                })
+            }
         },
+                
 
         selectDone() {
-            this.filteredTodo.filter(todo => todo.selected).forEach(todo => {
-                todo.isDone = true;
+            if (this.filteredTodo.filter(todo => todo.selected).every(todo=>todo.isDone)) {
+                this.filteredTodo.filter(todo => todo.selected).forEach(todo => {
+                todo.isDone = false;
             });
+            } else {
+                this.filteredTodo.filter(todo => todo.selected).forEach(todo => {
+                    todo.isDone = true;
+                });
+            }
         }
-
+        
     },
+    
 
     // beforeCreate() {
     //     console.log('beforeCreate : 인스턴스 초기화 직후입니다. 아직 DOM에 접근이 불가합니다.');
