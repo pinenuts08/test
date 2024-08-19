@@ -50,3 +50,7 @@ span {
     display: inline-block;
     width: 220px;
 }
+
+.isEditing{
+    width: 115px;
+}

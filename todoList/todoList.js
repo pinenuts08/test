@@ -92,7 +92,7 @@ new Vue({
                 this.cnt++ // count 하나 늘리기
                 localStorage.setItem("cnt", this.cnt); // 새로운 count값 로컬 스토리지에 저장
 
-                let currTodo = {text: this.newTodo, selected: false, id: this.cnt, isEditing: false, isDone: false};
+                let currTodo = {text: this.newTodo, originalText:'', selected: false, id: this.cnt, isEditing: false, isDone: false};
                 this.todoList.push(currTodo);
                 this.newTodo = '';
                 
@@ -131,15 +131,26 @@ new Vue({
         },
 
         editTodo(id) {
-            this.todoList.find(todo => todo.id === id).isEditing = true;
+            let currTodo = this.todoList.find(todo => todo.id === id);
+            currTodo.isEditing = true;
+            currTodo.originalText = currTodo.text;
+            this.updateLocalStorage();
         },
         
         updateTodo(id) {
-            if (!this.todoList.find(todo => todo.id === id).text) {
+            let currTodo = this.todoList.find(todo => todo.id === id)
+            if (!currTodo.text) {
                 alert("내용을 입력해주세요.");
                 return;
             }
-            this.todoList.find(todo => todo.id === id).isEditing = false;
+            currTodo.isEditing = false;
+            this.updateLocalStorage();
+        },
+
+        cancelUpdate(id){
+            let currTodo = this.todoList.find(todo => todo.id === id);
+            currTodo.text = currTodo.originalText;
+            currTodo.isEditing = false;
             this.updateLocalStorage();
         },
         
