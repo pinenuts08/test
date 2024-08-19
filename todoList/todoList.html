@@ -88,9 +88,15 @@
                     <button v-if="!todo.isEditing" @click="editTodo(todo.id)" class="btn">
                         수정
                     </button>
-                    <button v-else @click="updateTodo(todo.id)" class="btn">
-                        수정 완료
-                    </button>
+                    <span v-else class="isEditing">
+                        <button @click="updateTodo(todo.id)" class="btn">
+                            수정 완료
+                        </button>
+                        <!-- 수정 취소 버튼 -->
+                        <button @click="cancelUpdate(todo.id)" class="btn">
+                            취소
+                        </button>
+                    </span>
 
                     <!-- 할 일 삭제 버튼 -->
                     <button @click="deleteTodo(todo.id)" class="btn">
